@@ -1,0 +1,138 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Spice</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <link href="~/css/all.min.css" rel="stylesheet" />
+    <link href="~/css/site.css" rel="stylesheet" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.13.16/jquery.timepicker.css" />
+
+
+</head>
+<body class="webBackground">
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
+            <div class="container">
+
+                <a class="navbar-brand" asp-area="Customer" asp-controller="Home" asp-action="Index">
+                    <img src="" />
+                    <img src="" />
+                    <img src="" />
+                    <label class="text-info" style="cursor:pointer">
+
+                        Spice
+                    </label>
+
+
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <partial name="_LoginPartial" />
+                    <ul class="navbar-nav flex-grow-1">
+
+
+
+
+                        @if (User.IsInRole(SD.ManagerUser))//اذا اليوسر الحالي مدير  تظهر
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Content Managment
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" asp-action="Index" asp-controller="Categories" asp-area="Admin">Category</a>
+                                    <a class="dropdown-item" asp-action="Index" asp-controller="SubCategory" asp-area="Admin"> Sub Category</a>
+                                    <a class="dropdown-item" asp-action="Index" asp-controller="MenuItems" asp-area="Admin">Menu Item </a>
+                                    <a class="dropdown-item" asp-action="Index" asp-controller="Coupons" asp-area="Admin">Coupons </a>
+                                    <a class="dropdown-item" asp-action="Index" asp-controller="Users" asp-area="Admin">Users </a>
+                                </div>
+                            </li>
+
+                        }
+
+                        @if (User.IsInRole(SD.CustomerEndUser) || User.IsInRole(SD.ManagerUser))// متاح للمدير فقط ليس للجميع
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link " asp-area="Customer" asp-controller="Orders" asp-action="OrderHistory">
+                                    Order History
+                                </a>
+                            </li>
+                        }
+
+
+
+                        @if (User.IsInRole(SD.ManagerUser) || User.IsInRole(SD.KitchenUser) || User.IsInRole(SD.FrontDeskUser))//اذا اليوسر الحالي مدير  تظهر
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownOrder" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  Orders 
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownOrder">
+
+
+                                    @if (User.IsInRole(SD.ManagerUser) || User.IsInRole(SD.KitchenUser))
+                                    {
+                                        <a class="dropdown-item" asp-action="ManageOrder" asp-controller="Orders" asp-area="Customer">Manage Order</a>
+                                    }
+                                    @if (User.IsInRole(SD.ManagerUser) || User.IsInRole(SD.FrontDeskUser))
+                                    {
+                                <a class="dropdown-item" asp-action="OrderPickup" asp-controller="Orders" asp-area="Customer">Order PickUp </a>
+                                    }
+                                    </div>
+                            </li>
+
+                        }
+
+
+
+                        @if (HttpContextAccessor.HttpContext.Session.GetInt32(SD.ShoppingCartCount) == null)
+                        {
+
+                            <li style="color:white">
+                                <a href="#" class="nav-link" style="text-decoration:none">
+                                    <i class="fas fa-shopping-cart"></i> &nbsp;(0)
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li style="color:white">
+                                <a asp-action="Index" asp-area="Customer" asp-controller="Carts" class="nav-link" style="text-decoration:none">
+                                    <i class="fas fa-shopping-cart"></i> &nbsp;(@HttpContextAccessor.HttpContext.Session.GetInt32(SD.ShoppingCartCount))
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted text-white-50 bg-dark">
+        <div class="container">
+            &copy; 2021 - Spice - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.tiny.cloud/1/ryn495rs554ehadem9xjdos6l4r2vlw6swptdo27oswrark4/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

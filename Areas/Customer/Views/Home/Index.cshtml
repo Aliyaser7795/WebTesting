@@ -1,0 +1,140 @@
+﻿@model IndexViewModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<style>
+
+    .menu-filter-list li {
+        display: inline-block;
+        cursor: pointer;
+        padding: 10px 20px 10px;
+        text-transform: uppercase;
+        background-color: #f5f5f5;
+        border-radius: 5px;
+        font-weight: 700;
+        font-size: 13px;
+        -moz-animation: all 0.3s;
+        transition: all 0.3s;
+        font-family: "poppins",sans-serif;
+    }
+
+        .menu-filter-list li.is-checke, .menu-filter-list li:hover {
+            background-color: #545b62;
+            color: #fff;
+        }
+
+</style>
+
+
+
+<br />
+
+<br />
+
+<br />
+
+<div class="whiteBackground container">
+    <ul id="menu-filter" class="menu-filter-list list-inline text-center">
+      
+        <li class="active btn btn-secondary ml-1 mr-1" data-filter=".AllCategories">  Show All  </li><!--اي شي كاتيكورز يجيبه-->
+
+        @foreach (var category in Model.Categories)
+        {
+            <li class=" ml-1 mr-1" data-filter=".@category.Name.Replace(" ",string.Empty)">  @category.Name  </li><!---->
+        }
+
+    </ul>
+
+    @foreach (var category in Model.Categories)
+    {
+        var menuItems = Model.MenuItems.Where(m => m.Category.Name.Equals(category.Name));
+
+        <div class="row">
+            @if (menuItems.Count() > 0)
+            {
+            <div class="col-12 @category.Name.Replace(" ",string.Empty) AllCategories">
+                <!---->
+                <div class="row">
+                    <h3 class="text-success">@category.Name</h3>
+                </div>
+
+                @foreach (var item in menuItems)
+                {
+                    <div class="border border-info rounded col-12" style="margin-top:10px;margin-bottom:10px;padding:10px;">
+                        <div class="row">
+                            <div class="col-md-3 col-sm-12">
+                                <img src="@item.Image" width="99%" style="border-radius:5px; border:1px solid #bbb9b9" />
+                            </div>
+
+                            <div class="col-md-9 col-sm-12">
+                                <div class="row pr-3">
+                                    <div class="col-8">
+                                        <label class="text-primary" style="font-size:21px;">
+                                            @item.Name
+                                        </label>
+                                        @if (item.Spicyness == "1")
+                                        {
+                                            <img src="~/images/mild.png" title="Mild" />
+                                        }
+
+                                        else if (item.Spicyness == "2")
+                                        {
+
+                                            <img src="~/images/spicy.png" title="Spicy" />
+                                        }
+
+                                        else if (item.Spicyness == "2")
+                                        {
+                                            <img src="~/images/veryspicy.png" title="Very Spice" />
+                                        }
+                                    </div>
+
+                                    <div class="col-4 text-right" style="color:maroon">
+                                        <h4>
+                                            $   @item.Price
+                                        </h4>
+                                    </div>
+                                </div>
+                                <div class="row col-12 text-justify d-none d-md-block">
+                                    <p>@Html.Raw(@item.Description) </p>
+                                </div>
+                                <div class="col-md-3 col-sm-12 offset-md-9 text-right">
+                                    <a asp-action="Details" class="btn btn-success form-control" asp-route-itemid="@item.Id">Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            }
+        </div>
+
+        <div class="p-2"></div>
+    }
+</div>
+@section Scripts{
+    <script>
+        $(document).ready(
+            function ($) {
+                $("#menu-filter li").click(//يعمل حف للاكتف ويفتح الاكليك //
+                    function () {
+
+                        $("#menu-filter li").removeClass("active btn btn-secondary");//حذف من الجميع
+                        $(this).addClass("active btn btn-secondary");
+                        var selectedFilter = $(this).data("filter");// يجلب الفتر الضغطت عليه //
+                        $(".AllCategories").fadeOut();//يخفي الكل 
+                        setTimeout(function () {
+                            $(selectedFilter).slideDown();//بظهر الفلتر الضغط عليه //
+                        }
+                            , 300);
+                    }
+                )
+            }
+        );
+    </script>
+
+}
+

@@ -1,0 +1,24 @@
+﻿@model string
+
+<div style="width:100%">
+    @if (Model == SD.StatusSubmitted)
+    {
+        <img src="~/images/Ali2.jpg"  width="50%"/>
+    }
+
+    @if (Model == SD.StatusInProcess)
+    {
+        <img src="~/images/Ali1.jpg"  width="50%" />
+    }
+
+    @if (Model == SD.StatusResdy)
+    {
+        <img src="~/images/Ali3.jpg"  width="50%" />
+    }
+
+    @if (Model == SD.StatusCompleted)
+    {
+        <img src="~/images/Ali4.jpg"   width="50%"/>
+    }
+
+</div>
